@@ -1,10 +1,10 @@
+const express = require('express');
 const cors = require('cors');
 const path = require('path');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(express.static(__dirname));
 
 // API: Jito Quick Snipe
 app.post('/api/quick-snipe', async (req, res) => {
@@ -28,11 +28,6 @@ app.post('/api/copy-trade', async (req, res) => {
     // Example: startWalletListener(targetWallet, config);
 
     res.json({ success: true, message: `Now listening to ${targetWallet}...` });
-});
-
-// Serve frontend for any other route
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 const PORT = 3000;

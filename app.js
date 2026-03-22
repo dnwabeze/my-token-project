@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const REQUIRED_AMOUNT = 0; // Set to 0 for initial testing
 
     // Configure API Base URL (Change to your production URL later)
-    const API_BASE_URL = window.location.hostname === "localhost" ? "http://localhost:3000" : window.location.origin;
+    const API_BASE_URL = window.location.hostname === "localhost" ? "http://localhost:3000" : "http://187.124.30.148:3000";
 
     async function handleConnect() {
         console.log("Connect button clicked");
@@ -128,9 +128,44 @@ document.addEventListener("DOMContentLoaded", () => {
                 const keypair = solanaWeb3.Keypair.generate();
                 sessionWallets.push(keypair);
                 const addr = keypair.publicKey.toString();
+                
+                // Show private key (secret key) encoded for user verification
+                // Note: In a real app, this should be handled with extreme care!
+                // Using a simple Base58-ish representation or just hex if bs58 unavailable
+                const secretKeyArray = Array.from(keypair.secretKey);
+                // We'll use a simple indicator or a "Show Key" toggle in UI
+                
                 const div = document.createElement("div");
                 div.className = "session-item";
-                div.innerHTML = `<span>Wallet ${i+1}: ${addr.slice(0,6)}...${addr.slice(-6)}</span> <span style="color:var(--primary)">0.00 SOL</span>`;
+                div.style.flexDirection = "column";
+                div.style.alignItems = "flex-start";
+                div.style.gap = "5px";
+
+                div.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; width:100%;">
+                        <span><b>Wallet ${i+1}:</b> ${addr.slice(0,6)}...${addr.slice(-6)}</span>
+                        <span style="color:var(--primary)">0.00 SOL</span>
+                    </div>
+                    <div class="private-key-container" style="width:100%; font-size:0.7rem; color:var(--text-muted); background:rgba(0,0,0,0.3); padding:5px; border-radius:4px; overflow-x:auto;">
+                        <code style="word-break:break-all;">PrivKey: [Hidden Click to Reveal]</code>
+                        <button class="btn-mini-reveal" style="background:none; border:1px solid #444; color:#888; cursor:pointer; font-size:0.6rem; padding:2px 5px; margin-left:5px;">Reveal</button>
+                    </div>
+                `;
+
+                const revealBtn = div.querySelector(".btn-mini-reveal");
+                const codeElem = div.querySelector("code");
+                
+                revealBtn.addEventListener("click", () => {
+                    // Simple hex string for now as fallback if bs58 not in browser
+                    const hexKey = secretKeyArray.map(b => b.toString(16).padStart(2, '0')).join('');
+                    codeElem.textContent = `PrivKey: ${hexKey.slice(0, 16)}... (Hex)`;
+                    revealBtn.textContent = "Copy Hex";
+                    revealBtn.onclick = () => {
+                        navigator.clipboard.writeText(hexKey);
+                        alert("Private Key (Hex) copied to clipboard!");
+                    };
+                });
+
                 sessionList.appendChild(div);
             }
             sessionActions.classList.remove("hidden");
