@@ -17,11 +17,17 @@ document.addEventListener("DOMContentLoaded", () => {
     async function handleConnect() {
         console.log("Connect button clicked");
         
+        // Check if site is opened via file:// protocol
+        if (window.location.protocol === "file:") {
+            console.warn("Wallet detection might fail on file:// protocol. Please use a local server.");
+            alert("⚠️ PRO TIP: Most Solana wallets (Phantom/Solflare) won't detect your site if opened as local file (file://). \n\nPlease run a local server like 'npx serve' or 'Live Server' for full functionality.");
+        }
+
         // Robust wallet detection
         let provider = window.phantom?.solana || window.solana || window.solflare;
         
         if (!provider) {
-            alert("No Solana wallet extension detected! Please install & unlock Phantom or Solflare and refresh the page.");
+            alert("No Solana wallet extension detected or blocked on file://. Please install & unlock Phantom or Solflare and refresh.");
             return;
         }
 
