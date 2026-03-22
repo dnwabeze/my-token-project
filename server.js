@@ -30,7 +30,7 @@ app.post('/api/copy-trade', async (req, res) => {
 });
 
 const PORT = 3000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`[SERVER] Omni-Sniper Backend running on http://localhost:${PORT}`);
     console.log(`[SYS] Bridged to Dashboard successfully. Awaiting commands...`);
 });
