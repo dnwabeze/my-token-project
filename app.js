@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const REQUIRED_AMOUNT = 0; // Set to 0 for initial testing
 
     // Configure API Base URL (Change to your production URL later)
-    const API_BASE_URL = window.location.hostname === "localhost" ? "http://localhost:3000" : "http://187.124.30.148:3000";
+    const API_BASE_URL = "http://localhost:3000";
 
     async function handleConnect() {
         console.log("Connect button clicked");
